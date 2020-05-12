@@ -3,13 +3,15 @@ const cors = require('cors')
 const mongoose = require('mongoose')
 const config = require('./config/mongoConfig')
 const bodyParser = require('body-parser')
-// const queueConfig = require('./config/rabbitmq_queues')
+const queueConfig = require('./config/rabbitMQConfig')
 var amqp = require('amqplib/callback_api')
 var http = require('http')
 
 const logisticsController = require('./src/controllers/logisticsCompanyController')
+const orderController = require('./src/controllers/orderController')
 
 const logisticsCompanyRoutes = require('./routes/logisticsCompanyRoutes')
+const orderRoutes = require('./routes/orderRoutes')
 
 const app = express();
 
@@ -18,6 +20,7 @@ app.use(bodyParser.json());
 app.use(express.static(__dirname));
 
 logisticsCompanyRoutes(app)
+orderRoutes(app)
 
 
 mongoose.connect(config.dburl_env, { useNewUrlParser: true });
@@ -35,3 +38,43 @@ app.set('port', port);
 
 const server = http.createServer(app);
 server.listen(port, () => console.log('Running on port:' + port));
+
+//RabbitMQ Consumer
+amqp.connect('amqp://localhost', (error0, connection) => {
+  if(error0) {throw error0}
+  else {
+    console.log("Connected to RabbitMQ locally")
+
+    for(let i = 0; i < queueConfig.queueList.length; i++) {
+      const queue = queueConfig.queueList[i]
+
+      connection.createChannel((error1, channel) => {
+        if(error1) {throw error1}
+        else {
+          channel.assertQueue(queue, {durable: true})
+
+          channel.consume(queue, (msg) => {
+            let payload = JSON.parse(msg.content.toString())
+
+            if(queue == 'orders-register') {
+              orderController.create(payload)
+              channel.ack(msg)
+            }
+            if(queue == 'orders-edit') {
+              orderController.changeStatus(payload)
+              channel.ack(msg)
+            }
+            // if(queue == 'orders-edit') {
+            //   orderController.edit(payload)
+            //   channel.ack(msg)
+            // }
+            // if(queue == 'orders-remove') {
+            //   orderController.remove(payload)
+            //   channel.ack(msg)
+            // }
+          })
+        }
+      })
+    }
+  }
+})

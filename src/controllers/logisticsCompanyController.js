@@ -130,7 +130,7 @@ module.exports = {
                                 }
                                 var payload = JSON.stringify(message)
 
-                                channel.assertQueue(queue, {durable: false})
+                                channel.assertQueue(queue, {durable: true})
                                 channel.sendToQueue(queue, Buffer.from(payload))
                                 console.log("Message for removing " + req.body.companyName + " was sent to the bus")
                                 res.status(200).send({Message : "Company removed and message sent to bus"})
