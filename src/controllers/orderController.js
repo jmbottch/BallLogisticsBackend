@@ -64,7 +64,7 @@ module.exports = {
                 connection.createChannel((error1, channel) => {
                     if(error1) throw error1
                     else {
-                        var queue = 'orders-edit-status'
+                        var exchange = 'orders-edit-status'
 
                         var message = {
                             orderNr : req.body.orderNr,
@@ -73,8 +73,10 @@ module.exports = {
 
                         var payload = JSON.stringify(message)
 
-                        channel.assertQueue(queue, {durable:true})
-                        channel.sendToQueue(queue, Buffer.from(payload))
+                        channel.assertExchange(exchange, 'fanout', {durable:true})
+                        channel.publish(exchange, '', Buffer.from(payload), {noAck : false})
+
+                        console.log("Message sent")
                         res.status(200).send({Message : "Request for setting orderstatus to received was sent"})
                     }
                 })
@@ -95,7 +97,7 @@ module.exports = {
                 connection.createChannel((error1, channel) => {
                     if(error1) throw error1
                     else {
-                        var queue = 'orders-edit-status'
+                        var exchange = 'orders-edit-status'
 
                         var message = {
                             orderNr : req.body.orderNr,
@@ -104,8 +106,9 @@ module.exports = {
 
                         var payload = JSON.stringify(message)
 
-                        channel.assertQueue(queue, {durable:true})
-                        channel.sendToQueue(queue, Buffer.from(payload))
+                        channel.assertExchange(exchange, 'fanout', {durable:true})
+                        channel.publish(exchange, '', Buffer.from(payload), {noAck : false})
+
                         res.status(200).send({Message : "Request for setting orderstatus to received was sent"})
                     }
                 })
@@ -126,7 +129,7 @@ module.exports = {
                 connection.createChannel((error1, channel) => {
                     if(error1) throw error1
                     else {
-                        var queue = 'orders-edit-status'
+                        var exchange = 'orders-edit-status'
 
                         var message = {
                             orderNr : req.body.orderNr,
@@ -135,8 +138,8 @@ module.exports = {
 
                         var payload = JSON.stringify(message)
 
-                        channel.assertQueue(queue, {durable:true})
-                        channel.sendToQueue(queue, Buffer.from(payload))
+                        channel.assertExchange(exchange, 'fanout', {durable:true})
+                        channel.publish(exchange, '', Buffer.from(payload), {noAck : false})
                         res.status(200).send({Message : "Request for setting orderstatus to received was sent"})
                     }
                 })

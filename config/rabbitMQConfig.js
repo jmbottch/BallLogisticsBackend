@@ -2,12 +2,12 @@ var orderRegisterQueue = 'orders-register'
 var orderEditQueue = 'orders-edit'
 var orderRemoveQueue = 'orders-remove'
 
-var queueList = [
+var exchangeList = [
     orderRegisterQueue,
     orderEditQueue,
     orderRemoveQueue
 ]
 
 module.exports = {
-    queueList
+    exchangeList
 }
