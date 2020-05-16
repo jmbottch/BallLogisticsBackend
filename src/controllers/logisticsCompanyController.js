@@ -37,7 +37,7 @@ module.exports = {
                         connection.createChannel((error1, channel) => {
                             if (error1) throw error1
                             else {
-                                var queue = 'logistics-register'
+                                var exchange = 'logistics-register'
 
                                 var message = {
                                     companyName: company.companyName,
@@ -47,9 +47,10 @@ module.exports = {
                                 }
                                 var payload = JSON.stringify(message)
 
-                                channel.assertQueue(queue, { durable: true })
-                                console.log("Message sent")
-                                channel.sendToQueue(queue, Buffer.from(payload))
+                                channel.assertExchange(exchange, 'fanout', {durable : true})
+                                channel.publish(exchange, '', Buffer.from(payload), {noAck : false})
+
+                                console.log("Message for registering " + company.companyName + " sent")
                                 res.status(200).send({ Message: "Company registered and message sent to bus" })
                             }
                         })
@@ -87,7 +88,7 @@ module.exports = {
                             if (error0) throw error0
                             connection.createChannel((error1, channel) => {
                                 if (error1) throw error1
-                                var queue = "logistics-edit"
+                                var exchange = "logistics-edit"
                                 // var msg = req.body
                                 var message = {
                                     companyName: company.companyName,
@@ -96,11 +97,11 @@ module.exports = {
                                     largePackageDeliveryPrices: largePricesToSet
                                 }
                                 let payload = JSON.stringify(message)
-                                channel.assertQueue(queue, {
-                                    durable: true
-                                })
-                                channel.sendToQueue(queue, Buffer.from(payload),{noAck: false})
-                                console.log("message for editing" + company.companyName + " sent to bus")
+
+                                channel.assertExchange(exchange, 'fanout', {durable: true})
+                                channel.publish(exchange, '', Buffer.from(payload), {noAck: false})
+
+                                console.log("message for editing " + company.companyName + " sent to bus")
                                 res.status(200).send({ result: "Company Registered and message added to the queue" })
                             })
                         })                       
@@ -124,14 +125,15 @@ module.exports = {
                         connection.createChannel((error1, channel) => {
                             if(error1) throw error1
                             else {
-                                var queue = 'logistics-remove'
+                                var exchange = 'logistics-remove'
                                 var message = {
                                     companyName : req.body.companyName
                                 }
                                 var payload = JSON.stringify(message)
 
-                                channel.assertQueue(queue, {durable: true})
-                                channel.sendToQueue(queue, Buffer.from(payload))
+                                channel.assertExchange(exchange, 'fanout', {durable: true})
+                                channel.publish(exchange, '', Buffer.from(payload), {noAck: false})
+
                                 console.log("Message for removing " + req.body.companyName + " was sent to the bus")
                                 res.status(200).send({Message : "Company removed and message sent to bus"})
                             }
