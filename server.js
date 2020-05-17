@@ -88,7 +88,24 @@ amqp.connect(rabbitconfig.rabbit_connect, (error0, connection) => {
                 console.log("Something went wrong")
               }
             })
-          } 
+          } else if (exchange == 'orders-remove') {
+            var queue = 'orders-remove-on-logistics'
+
+            channel.assertQueue(queue, {durable:true})
+            channel.bindQueue(queue, exchange, '')
+
+            console.log('@@@@ ---> ' + queue + ' queue is live.')
+
+            channel.consume(queue, (msg) => {
+              let payload = JSON.parse(msg.content.toString())
+              if(payload) {
+                orderController.delete(payload)
+                channel.ack(msg)
+              } else {
+                console.log("Something went wrong")
+              }
+            })
+          }
         }
       })
     }

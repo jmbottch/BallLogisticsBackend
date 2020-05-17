@@ -39,6 +39,17 @@ module.exports = {
             })
     },
 
+    delete(payload) {
+        Order.findOne({_id : payload._id})
+        .then((order) => {
+            order.remove()
+            console.log("Order has been removed")
+        })
+        .catch(() => {
+            console.log("Something went wrong")
+        })
+    },
+
     changeStatus(payload) {
         Order.findOne({_id : payload._id})
         .then((order) => {
