@@ -14,7 +14,7 @@ module.exports = {
     },
 
     getOne(req, res) {
-        LogisticsCompany.findOne({ companyName: req.body.companyName })
+        LogisticsCompany.findOne({ _id: req.body._id })
             .then((company) => {
                 res.status(200).send(company)
             })

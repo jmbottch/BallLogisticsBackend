@@ -14,7 +14,7 @@ module.exports = {
     },
 
     getOne(req, res) {
-        Order.findOne({ orderNr: req.body.orderNr })
+        Order.findOne({ _id: req.body._id })
             .then((order) => {
                 res.status(200).send(order)
             })
@@ -39,7 +39,7 @@ module.exports = {
     },
 
     changeStatus(payload) {
-        Order.findOne({orderNr : payload.orderNr})
+        Order.findOne({_id : payload._id})
         .then((order) => {
             order.set({
                 status : payload.status
@@ -68,7 +68,7 @@ module.exports = {
                         var exchange = 'orders-edit-status'
 
                         var message = {
-                            orderNr : req.body.orderNr,
+                            _id : req.body._id,
                             status : "RECEIVED AT SORTING CENTRE"
                         }
 
@@ -101,7 +101,7 @@ module.exports = {
                         var exchange = 'orders-edit-status'
 
                         var message = {
-                            orderNr : req.body.orderNr,
+                            _id : req.body._id,
                             status : "DELIVERED"
                         }
 
@@ -133,7 +133,7 @@ module.exports = {
                         var exchange = 'orders-edit-status'
 
                         var message = {
-                            orderNr : req.body.orderNr,
+                            _id : req.body._id,
                             status : "SHIPPED"
                         }
 
