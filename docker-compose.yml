@@ -1,0 +1,27 @@
+version: "3"
+services:
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    expose:
+      - "5672"
+      - "15672"
+  mongodb:
+    image: mongo
+    ports:
+      - "27017:27017"
+  web:
+    container_name: balllogistics
+    restart: on-failure
+    build: .
+    ports:
+      - "3006:3006"
+    depends_on:
+      - rabbitmq
+      - mongodb
+    links:
+      - rabbitmq
+      - mongodb

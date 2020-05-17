@@ -1,5 +1,6 @@
 const LogisticsCompany = require('../models/logisticsCompany')
 const amqp = require('amqplib/callback_api')
+const rabbitconfig = require('../../config/rabbitMQConfig')
 
 module.exports = {
 
@@ -31,7 +32,7 @@ module.exports = {
             largePackageDeliveryPrices: req.body.largePackageDeliveryPrices
         })
             .then((company) => {
-                amqp.connect('amqp://localhost', (error0, connection) => {
+                amqp.connect(rabbitconfig.rabbit_connect, (error0, connection) => {
                     if (error0) throw error0
                     else {
                         connection.createChannel((error1, channel) => {
@@ -85,7 +86,7 @@ module.exports = {
                 })
                 company.save()
                     .then(() => {
-                        amqp.connect('amqp://localhost', (error0, connection) => {
+                        amqp.connect(rabbitconfig.rabbit_connect, (error0, connection) => {
                             if (error0) throw error0
                             connection.createChannel((error1, channel) => {
                                 if (error1) throw error1
@@ -121,7 +122,7 @@ module.exports = {
         LogisticsCompany.findOne({ _id: req.body._id })
             .then((company) => {
                 company.remove()
-                amqp.connect('amqp://localhost', (error0, connection) => {
+                amqp.connect(rabbitconfig.rabbit_connect, (error0, connection) => {
                     if(error0) throw error0
                     else {
                         connection.createChannel((error1, channel) => {

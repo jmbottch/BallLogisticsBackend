@@ -8,6 +8,9 @@ var exchangeList = [
     orderRemoveQueue
 ]
 
+var rabbit_connect = 'amqp://rabbitmq:5672'
+
 module.exports = {
-    exchangeList
+    exchangeList,
+    rabbit_connect
 }
