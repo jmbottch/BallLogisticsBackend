@@ -6,6 +6,7 @@ const bodyParser = require('body-parser')
 const queueConfig = require('./config/rabbitMQConfig')
 var amqp = require('amqplib/callback_api')
 var http = require('http')
+const rabbitconfig = require('./config/rabbitMQConfig')
 
 const logisticsController = require('./src/controllers/logisticsCompanyController')
 const orderController = require('./src/controllers/orderController')
@@ -41,7 +42,7 @@ server.listen(port, () => console.log('Running on port:' + port));
 
 //RabbitMQ Consumer
 
-amqp.connect('amqp://localhost', (error0, connection) => {
+amqp.connect(rabbitconfig.rabbit_connect, (error0, connection) => {
   if(error0) throw error0
   else {
     console.log("Connected to RabbitMQ locally")
@@ -95,7 +96,7 @@ amqp.connect('amqp://localhost', (error0, connection) => {
 })
 
 // //RabbitMQ Consumer
-// amqp.connect('amqp://localhost', (error0, connection) => {
+// amqp.connect(rabbitconfig., (error0, connection) => {
 //   if(error0) {throw error0}
 //   else {
 //     console.log("Connected to RabbitMQ locally")

@@ -1,5 +1,6 @@
 const Order = require('../models/order')
 const amqp = require('amqplib/callback_api')
+const rabbitconfig = require('../../config/rabbitMQConfig')
 
 module.exports = {
 
@@ -59,7 +60,7 @@ module.exports = {
 
     setReceived(req, res) {
         try {
-            amqp.connect('amqp://localhost', (error0, connection) => {
+            amqp.connect(rabbitconfig.rabbit_connect, (error0, connection) => {
             if(error0) throw error0
             else {
                 connection.createChannel((error1, channel) => {
@@ -92,7 +93,7 @@ module.exports = {
 
     setDelivered(req, res) {
         try {
-            amqp.connect('amqp://localhost', (error0, connection) => {
+            amqp.connect(rabbitconfig.rabbit_connect, (error0, connection) => {
             if(error0) throw error0
             else {
                 connection.createChannel((error1, channel) => {
@@ -124,7 +125,7 @@ module.exports = {
 
     setShipped(req, res) {
         try {
-            amqp.connect('amqp://localhost', (error0, connection) => {
+            amqp.connect(rabbitconfig.rabbit_connect, (error0, connection) => {
             if(error0) throw error0
             else {
                 connection.createChannel((error1, channel) => {

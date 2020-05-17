@@ -7,7 +7,8 @@ var env = {
     dbDatabase: process.env.DB_DATABASE || 'BallLogisticsCompanies'
 }
 
-var dburl_env = "mongodb://localhost:27017/BallLogisticsCompanies";
+// var dburl_env = "mongodb://localhost:27017/BallLogisticsCompanies";
+var dburl_env = "mongodb://mongodb:27017/BallLogisticsCompanies"
 
 module.exports = {
      env,
