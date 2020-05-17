@@ -105,7 +105,7 @@ module.exports = {
                                 channel.publish(exchange, '', Buffer.from(payload), {noAck: false})
 
                                 console.log("message for editing " + company.companyName + " sent to bus")
-                                res.status(200).send({ result: "Company Registered and message added to the queue" })
+                                res.status(200).send({ result: "Company Updated and message added to the queue" })
                             })
                         })                       
                     })
