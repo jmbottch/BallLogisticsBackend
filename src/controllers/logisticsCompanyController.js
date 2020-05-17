@@ -40,6 +40,7 @@ module.exports = {
                                 var exchange = 'logistics-register'
 
                                 var message = {
+                                    _id : company._id,
                                     companyName: company.companyName,
                                     smallPackageDeliveryPrices: company.smallPackageDeliveryPrices,
                                     mediumPackageDeliveryPrices: company.mediumPackageDeliveryPrices,
@@ -67,7 +68,7 @@ module.exports = {
     },
 
     update(req, res) {
-        LogisticsCompany.findOne({ companyName: req.body.companyName })
+        LogisticsCompany.findOne({ _id: req.body._id })
             .then((company) => {
                 let smallPricesToSet = req.body.smallPackageDeliveryPrices
                 let mediumPricesToSet = req.body.mediumPackageDeliveryPrices
@@ -91,6 +92,7 @@ module.exports = {
                                 var exchange = "logistics-edit"
                                 // var msg = req.body
                                 var message = {
+                                    _id : company._id,
                                     companyName: company.companyName,
                                     smallPackageDeliveryPrices: smallPricesToSet,
                                     mediumPackageDeliveryPrices: mediumPricesToSet,
@@ -116,7 +118,7 @@ module.exports = {
     },
 
     remove(req, res) {
-        LogisticsCompany.findOne({ companyName: req.body.companyName })
+        LogisticsCompany.findOne({ _id: req.body._id })
             .then((company) => {
                 company.remove()
                 amqp.connect('amqp://localhost', (error0, connection) => {
@@ -127,7 +129,7 @@ module.exports = {
                             else {
                                 var exchange = 'logistics-remove'
                                 var message = {
-                                    companyName : req.body.companyName
+                                    _id : req.body._id
                                 }
                                 var payload = JSON.stringify(message)
 

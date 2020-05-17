@@ -25,6 +25,7 @@ module.exports = {
 
     create(payload) {
         Order.create({
+            _id : payload._id,
             orderNr: payload.orderNr,
             status: payload.status,
             orderSize: payload.products.length,
